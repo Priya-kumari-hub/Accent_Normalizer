@@ -1,0 +1,6 @@
+openai-whisper
+edge-tts
+moviepy
+fastapi
+uvicorn
+pandas
