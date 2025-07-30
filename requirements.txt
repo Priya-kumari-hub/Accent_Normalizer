@@ -4,3 +4,5 @@ moviepy
 fastapi
 uvicorn
 pandas
+whisper
+pydub
