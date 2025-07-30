@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import FileResponse
 import os
 import shutil
@@ -14,7 +14,10 @@ UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @app.post("/convert")
-async def convert_video_to_indian_accent(video: UploadFile = File(...)):
+async def convert_video_to_indian_accent(
+    video: UploadFile = File(...),
+    gender: str = Form("female")  # Accept "male" or "female" input
+):
     # Save uploaded video
     file_id = str(uuid.uuid4())
     input_video_path = os.path.join(UPLOAD_DIR, f"{file_id}.mp4")
@@ -31,8 +34,8 @@ async def convert_video_to_indian_accent(video: UploadFile = File(...)):
     # Step 3: Transcribe
     transcribe_audio_chunks("chunks", output_csv="transcriptions.csv")
 
-    # Step 4: TTS
-    convert_transcriptions_to_indian_accent("transcriptions.csv", "tts_outputs")
+    # Step 4: TTS conversion (with gendered voice)
+    convert_transcriptions_to_indian_accent("transcriptions.csv", "tts_outputs", gender=gender)
 
     # Step 5: Merge new audio with original video
     final_output_path = os.path.join("static", f"{file_id}_output.mp4")
