@@ -1,36 +1,41 @@
+from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import FileResponse
 import os
-from video_audio_utils import extract_audio_from_video, split_audio, merge_audio_with_video
+import shutil
+import uuid
+
+from video_audio_utils import extract_audio_from_video, split_audio_to_chunks, merge_audio_with_video
 from transcription import transcribe_audio_chunks
-from tts_converter import convert_texts_to_speech
+from tts_converter import convert_transcriptions_to_indian_accent
 
-# Configuration
-VIDEO_PATH = "input_video.mp4"                          # Input video file path
-FULL_AUDIO_PATH = "full_audio.wav"                      # Audio extracted from video
-CHUNK_FOLDER = "chunks"                                 # Folder to save audio chunks
-TRANSCRIPTION_CSV = "transcriptions.csv"                # Where transcriptions are saved
-TTS_OUTPUT_PATH = "tts_outputs/indian_accent_audio.wav" # Path to save generated Indian-accent audio
-FINAL_VIDEO_PATH = "static/final_output.mp4"            # Final video output path
-CHUNK_DURATION_MS = 60000                               # 60 seconds per chunk
+app = FastAPI()
 
-def main():
-    print("🚀 Starting Indian Accent Conversion Pipeline")
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-    # Step 1: Extract audio from video
-    extract_audio_from_video(VIDEO_PATH, FULL_AUDIO_PATH)
+@app.post("/convert")
+async def convert_video_to_indian_accent(video: UploadFile = File(...)):
+    # Save uploaded video
+    file_id = str(uuid.uuid4())
+    input_video_path = os.path.join(UPLOAD_DIR, f"{file_id}.mp4")
+    
+    with open(input_video_path, "wb") as buffer:
+        shutil.copyfileobj(video.file, buffer)
 
-    # Step 2: Split audio into manageable chunks
-    chunk_paths = split_audio(FULL_AUDIO_PATH, CHUNK_DURATION_MS, CHUNK_FOLDER)
+    # Step 1: Extract audio
+    audio_path = extract_audio_from_video(input_video_path)
 
-    # Step 3: Transcribe each audio chunk using Whisper
-    transcribe_audio_chunks(CHUNK_FOLDER, TRANSCRIPTION_CSV)
+    # Step 2: Split audio
+    split_audio_to_chunks(audio_path, "chunks")
 
-    # Step 4: Generate Indian-accented speech using TTS
-    convert_texts_to_speech(TRANSCRIPTION_CSV, TTS_OUTPUT_PATH)
+    # Step 3: Transcribe
+    transcribe_audio_chunks("chunks", output_csv="transcriptions.csv")
 
-    # Step 5: Merge generated audio with original video
-    merge_audio_with_video(VIDEO_PATH, TTS_OUTPUT_PATH, FINAL_VIDEO_PATH)
+    # Step 4: TTS
+    convert_transcriptions_to_indian_accent("transcriptions.csv", "tts_outputs")
 
-    print("✅ All done! Final output saved at:", FINAL_VIDEO_PATH)
+    # Step 5: Merge new audio with original video
+    final_output_path = os.path.join("static", f"{file_id}_output.mp4")
+    merge_audio_with_video(input_video_path, os.path.join("tts_outputs", "combined_audio.mp3"), final_output_path)
 
-if __name__ == "__main__":
-    main()
+    return FileResponse(final_output_path, media_type="video/mp4", filename="converted_video.mp4")
