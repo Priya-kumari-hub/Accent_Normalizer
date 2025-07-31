@@ -1,9 +1,8 @@
-
+# ✅ video_audio_utils.py (Simplified for short videos)
 import os
 from moviepy.editor import VideoFileClip, AudioFileClip
-from pydub import AudioSegment
-from pydub.utils import make_chunks
 
+# Extract audio from video (no chunking)
 def extract_audio_from_video(video_path, output_audio_path="full_audio.wav"):
     print(f"🎬 Extracting audio from {video_path}")
     video = VideoFileClip(video_path)
@@ -11,21 +10,7 @@ def extract_audio_from_video(video_path, output_audio_path="full_audio.wav"):
     print(f"✅ Audio saved to {output_audio_path}")
     return output_audio_path
 
-def split_audio(audio_path, chunk_length_ms=20000, output_folder="chunks"):
-    print(f"✂️ Splitting audio into {chunk_length_ms / 1000} second chunks")
-    os.makedirs(output_folder, exist_ok=True)
-    audio = AudioSegment.from_file(audio_path)
-    chunks = make_chunks(audio, chunk_length_ms)
-
-    chunk_paths = []
-    for i, chunk in enumerate(chunks):
-        chunk_name = os.path.join(output_folder, f"chunk_{i+1}.wav")
-        chunk.export(chunk_name, format="wav")
-        chunk_paths.append(chunk_name)
-        print(f"✅ Saved: {chunk_name}")
-
-    return chunk_paths
-
+# Merge Indian-accent audio with original video
 def merge_audio_with_video(original_video_path, tts_audio_path, output_path="static/final_output.mp4"):
     print(f"🔄 Merging {tts_audio_path} with {original_video_path}")
     video = VideoFileClip(original_video_path)
