@@ -10,4 +10,4 @@ fastapi
 uvicorn
 whisper
 python-multipart
-
+yt-dlp
