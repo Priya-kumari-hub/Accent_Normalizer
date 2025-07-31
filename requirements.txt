@@ -1,10 +1,12 @@
+
 fastapi
 uvicorn
-openai-whisper==20231117  # or latest available stable version
+openai-whisper==20231117
+torch==2.1.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 edge-tts
 moviepy==1.0.3
-imageio==2.31.1
-imageio-ffmpeg==0.4.8
+imageio
+imageio-ffmpeg
 pydub
 ffmpeg-python
 python-multipart
