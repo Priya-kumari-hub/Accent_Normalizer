@@ -1,4 +1,4 @@
-# main.py (optimized for short videos, avoids chunking and GPU usage)
+# ✅ main.py (optimized for short videos, avoids chunking and GPU usage)
 
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import FileResponse
@@ -56,7 +56,7 @@ async def process_pipeline(input_video_path, gender, file_id):
     if not os.path.exists(input_video_path):
         return {"error": f"❌ File not found at {input_video_path}"}
 
-    print(f"🎬 Extracting audio from {input_video_path}")
+    print(f"🎮 Extracting audio from {input_video_path}")
     audio_path = extract_audio_from_video(input_video_path)
 
     text = transcribe_audio(audio_path)
