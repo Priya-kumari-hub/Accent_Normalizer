@@ -1,8 +1,7 @@
-chunks/*
-tts_outputs/*
-static/*
-uploads/*
-!chunks/.gitkeep
-!tts_outputs/.gitkeep
-!static/.gitkeep
-!uploads/.gitkeep
+
+__pycache__/
+*.pyc
+uploads/
+static/
+tts_outputs/
+
