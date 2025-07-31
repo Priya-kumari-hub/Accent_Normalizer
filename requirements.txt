@@ -1,11 +1,13 @@
 openai-whisper
 edge-tts
 moviepy
-fastapi
-uvicorn
-pandas
-whisper
+imageio
+imageio-ffmpeg
 pydub
 ffmpeg-python
+pandas
+fastapi
+uvicorn
+whisper
 python-multipart
 
