@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-openai-whisper
+openai-whisper==20231117  # or latest available stable version
 edge-tts
 moviepy==1.0.3
 imageio==2.31.1
