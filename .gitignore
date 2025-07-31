@@ -1,8 +1,8 @@
-input_video.mp4
-transcriptions.csv
 chunks/*
 tts_outputs/*
 static/*
+uploads/*
 !chunks/.gitkeep
 !tts_outputs/.gitkeep
 !static/.gitkeep
+!uploads/.gitkeep
