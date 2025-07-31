@@ -4,7 +4,8 @@ import os
 import shutil
 import uuid
 
-from video_audio_utils import extract_audio_from_video, split_audio_to_chunks, merge_audio_with_video
+from video_audio_utils import extract_audio_from_video, split_audio, merge_audio_with_video
+
 from transcription import transcribe_audio_chunks
 from tts_converter import convert_transcriptions_to_indian_accent
 
