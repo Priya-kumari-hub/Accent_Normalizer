@@ -6,9 +6,17 @@ import uuid
 import subprocess
 import pandas as pd
 
+# 👇 Add this block to debug MoviePy import issue
+try:
+    from moviepy.editor import VideoFileClip
+    print("✅ moviepy.editor import successful.")
+except Exception as e:
+    print("❌ MoviePy import failed:", e)
+
 from video_audio_utils import extract_audio_from_video, split_audio, merge_audio_with_video
 from transcription import transcribe_audio_chunks
 from tts_converter import convert_transcriptions_to_indian_accent
+
 
 app = FastAPI()
 
